@@ -32,4 +32,4 @@ def roll_full(at, pow, defense, arm, dice_hit, dice_dmg):
         dmg_result = roll_dmg(pow, arm, dice_dmg)
         return(dmg_result)
     else:
-         return(0)
+         return(-1)
