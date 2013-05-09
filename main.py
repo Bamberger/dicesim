@@ -15,7 +15,7 @@ arm = 20  # ARM of Defender
 dice_hit = 3  # Number of Hit dice
 dice_dmg = 3  # Number of Damage dice
 full = 1
-foc = 0
+foc = 7
 max_result = 51
 
 # Arguments handler
@@ -69,19 +69,22 @@ def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, b
         if input_foc >= 1:
             if boostflag == 0:
                 result = sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg)  # Do initial attacks
-                while input_foc >= 1:
+                while input_foc > 0:
                     out = sim.simroll(1, at, pow, defense, arm, dice_hit, dice_dmg)
+                    if out == -1:
+                        out = 0
                     result = result + out
                     input_foc -= 1
             if boostflag == 1:
                 attacks_remaining = attacks
-                while input_foc > 0:
-                    out = sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
-                    if out == -1:
-                        out = 0
-                    result = result + out
-                    input_foc -= input_foc
-                    attacks_remaining -= 1
+                while attacks_remaining > 0:
+                    while input_foc > 0:
+                        out = sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
+                        if out == -1:
+                            out = 0
+                        result = result + out
+                        input_foc -= 1
+                        attacks_remaining -= 1
                 if attacks_remaining > 0:
                     out = sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
                     if out == -1:
