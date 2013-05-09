@@ -49,7 +49,7 @@ if args.foc:
 #     sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg)
 #     print("Boosted Attack")
 #     sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg)
-#     print("Booosted Damage")
+#     print("Boosted Damage")
 #     sim.simroll(attacks,at, pow, defense, arm, dice_hit, dice_dmg + 1)
 #     print("Fully Boosted")
 #     sim.simroll(attacks,at, pow, defense, arm, dice_hit + 1, dice_dmg + 1)

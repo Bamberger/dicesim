@@ -6,6 +6,7 @@ import multiprocessing
 
 max_result = 51
 
+
 results = [0] * max_result  # Create an array to handle up to 'max_result' dmg
 landing_results = []  # Create an array for results to land in before sorting
 
