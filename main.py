@@ -16,10 +16,10 @@ pow = 9  # POW of Hit
 defense = 7  # DEF of Defender
 arm = 20  # ARM of Defender
 dice_hit = 2  # Number of Hit dice
-dice_dmg = 3  # Number of Damage dice
+dice_dmg = 4  # Number of Damage dice
 full = 1
 foc = 0
-max_result = 1000
+max_result = 100
 
 # Arguments handler
 parser = argparse.ArgumentParser()
@@ -68,10 +68,10 @@ def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, b
     while counter_cycle < cycles:
         result = 0
         counter_cycle += 1
-        if full == 1:
-            process = counter_cycle / cycles * 10
-            if process == int(process):
-                print(int(process * 10), "% Complete",round(time.time() - start_time,2), "seconds")           
+#         if full == 1:
+#             process = counter_cycle / cycles * 10
+#             if process == int(process):
+#                 print(int(process * 10), "% Complete",round(time.time() - start_time,2), "seconds")           
         if input_foc == 0:  # If we are not in focus mode...
             cycle_attacks = attacks
             while cycle_attacks > 0:          
