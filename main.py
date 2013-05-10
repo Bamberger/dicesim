@@ -7,16 +7,16 @@ import sim
 
 # Predefined Variables
 cycles = 10000  # How many attack cycles to sim
-attacks = 1  # How many attacks to sim
-at = 7  # MAT/RAT of Attacker
-pow = 11  # POW of Hit
-defense = 14  # DEF of Defender
-arm = 20  # ARM of Defender
-dice_hit = 3  # Number of Hit dice
-dice_dmg = 3  # Number of Damage dice
+attacks = 16  # How many attacks to sim
+at = 8  # MAT/RAT of Attacker
+pow = 14  # POW of Hit
+defense = 16  # DEF of Defender
+arm = 18  # ARM of Defender
+dice_hit = 2  # Number of Hit dice
+dice_dmg = 2  # Number of Damage dice
 full = 1
-foc = 7
-max_result = 51
+foc = 0
+max_result = 100
 
 # Arguments handler
 parser = argparse.ArgumentParser()
@@ -57,94 +57,49 @@ def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, b
     ordered_results = []  # Create an array for results to land in before sorting
     input_foc = foc  # Grab the foc now before we manipulate it
     out = 0
-    result = 0
     
     counter_cycle = 0
     while counter_cycle < cycles:
+        result = 0
         counter_cycle += 1
         if input_foc == 0:  # If we are not in focus mode...
-            result = sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg)  # Do initial attacks
-            if result == -1:
-                result = 0
-        if input_foc >= 1:
-            if boostflag == 0:
-                result = sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg)  # Do initial attacks
-                while input_foc > 0:
-                    out = sim.simroll(1, at, pow, defense, arm, dice_hit, dice_dmg)
-                    if out == -1:
-                        out = 0
-                    result = result + out
-                    input_foc -= 1
-            if boostflag == 1:
-                attacks_remaining = attacks
-                while attacks_remaining > 0:
-                    while input_foc > 0:
-                        out = sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
-                        if out == -1:
-                            out = 0
-                        result = result + out
-                        input_foc -= 1
-                        attacks_remaining -= 1
-                if attacks_remaining > 0:
-                    out = sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
-                    if out == -1:
-                        out = 0
-                    result = out 
-                    attacks_remaining -= 1                 
-                while input_foc >= 2:
-                    buy = buy + sim.simroll(1, at, pow, defense, arm, dice_hit + 1, dice_dmg)
-                    input_foc -= 2        
-            if boostflag == 2:
-#                 if input_foc >= attacks:
-#                     result = sim.simroll(attacks, at, pow, defense, arm, dice_hit, dice_dmg + 1)  # Do initial attacks
-#                     input_foc = input_foc - attacks
-#                 else:
-                attacks_remaining = attacks
-                while input_foc > 0:
-                    result = result + sim.simroll(attacks_remaining, at, pow, defense, arm, dice_hit, dice_dmg + 1)
-                    input_foc -= input_foc
-                    attacks_remaining -= attacks_remaining
-                if attacks_remaining > 0:
-                    attacks_remaining -= attacks_remaining
-                    result = result + sim.simroll(attacks_remaining, at, pow, defense, arm, dice_hit, dice_dmg)                   
-                while input_foc >= 2:
-                    buy = buy + sim.simroll(1, at, pow, defense, arm, dice_hit, dice_dmg + 1)
-                    input_foc -= 2       
-
-
-        if input_foc == 1:  # If one foc is left, buy an attack
-            out = sim.simroll(1, at, pow, defense, arm, dice_hit, dice_dmg)
-            if out == -1:
-                out = 0
-        result = result + out
+            cycle_attacks = attacks
+            while cycle_attacks > 0:
+                out = rolls.roll_full(at, pow, defense, arm, dice_hit, dice_dmg)  # Do initial attacks
+                if out == -1:
+                    out = 0
+                result = result + out
+                cycle_attacks -= 1
+#         if input_foc == 1:  # If one foc is left, buy an attack
+#             out = sim.simroll(1, at, pow, defense, arm, dice_hit, dice_dmg)
+#             if out == -1:
+#                 out = 0
+#             result = result + out
         ordered_results.append(result)
-    
-    
+        
     ordered_results.sort()  # Order the ordered_results for later use
     
-    for index, i in enumerate(ordered_results):  # simroll returns -1 for a miss, we need to replace that
-        if i == -1:
-            i = 0
-            ordered_results[index] = 0
+    for index, i in enumerate(ordered_results):
         results[i] += 1  # Populate the results array
         
     damage_total = sum(ordered_results)
      
     # print("Total Damage:", damage_total)
-    print("Average Damage:", round(damage_total / cycles, 2))
+    print("Average Damage:", "\t", round(damage_total / cycles, 2))
      
-    print("25th Percentile:", percentile.percentile(ordered_results, 0.25))
-    print("50th Percentile:", percentile.percentile(ordered_results, 0.50))
-    print("75th Percentile:", percentile.percentile(ordered_results, 0.75))
-    print("90th Percentile:", percentile.percentile(ordered_results, 0.90))
+    print("25th Percentile:", "\t", percentile.percentile(ordered_results, 0.25))
+    print("50th Percentile:", "\t", percentile.percentile(ordered_results, 0.50))
+    print("75th Percentile:", "\t", percentile.percentile(ordered_results, 0.75))
+    print("90th Percentile:", "\t", percentile.percentile(ordered_results, 0.90))
     
     if full == 1:
+        print("DAMAGE\t", "CONFIDENCE\t", "SPECIFIC")
         result_counter = 0
         while result_counter < max_result:
             if results[result_counter] != 0:
                 ordered_index = ordered_results.index(result_counter)
                 confidence = cycles - ordered_index
-                print(result_counter, "damage: ", round(confidence / cycles * 100, 2), "%,", round(results[result_counter] / cycles * 100, 2), "%")
+                print(result_counter, "\t", round(confidence / cycles * 100, 2), "%", "\t", round(results[result_counter] / cycles * 100, 2), "%")
             result_counter += 1
             
 if foc > 0:
