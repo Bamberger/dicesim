@@ -4,19 +4,22 @@ import percentile
 import argparse
 import multiprocessing
 import sim
+import time
+
+start_time = time.time()
 
 # Predefined Variables
-cycles = 10000  # How many attack cycles to sim
-attacks = 16  # How many attacks to sim
-at = 8  # MAT/RAT of Attacker
-pow = 14  # POW of Hit
-defense = 16  # DEF of Defender
-arm = 18  # ARM of Defender
+cycles = 1000000  # How many attack cycles to sim
+attacks = 1  # How many attacks to sim
+at = 7  # MAT/RAT of Attacker
+pow = 9  # POW of Hit
+defense = 7  # DEF of Defender
+arm = 20  # ARM of Defender
 dice_hit = 2  # Number of Hit dice
-dice_dmg = 2  # Number of Damage dice
+dice_dmg = 3  # Number of Damage dice
 full = 1
 foc = 0
-max_result = 100
+max_result = 1000
 
 # Arguments handler
 parser = argparse.ArgumentParser()
@@ -52,6 +55,9 @@ if args.full:
 # if args.foc:    
 #     attacks = int(args.foc)
 
+# delta_hit = defense - at
+# delta_arm = arm - pow
+
 def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, boostflag):
     results = [0] * max_result  # Create an array to handle up to 'max_result' dmg
     ordered_results = []  # Create an array for results to land in before sorting
@@ -62,9 +68,13 @@ def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, b
     while counter_cycle < cycles:
         result = 0
         counter_cycle += 1
+        if full == 1:
+            process = counter_cycle / cycles * 10
+            if process == int(process):
+                print(int(process * 10), "% Complete",round(time.time() - start_time,2), "seconds")           
         if input_foc == 0:  # If we are not in focus mode...
             cycle_attacks = attacks
-            while cycle_attacks > 0:
+            while cycle_attacks > 0:          
                 out = rolls.roll_full(at, pow, defense, arm, dice_hit, dice_dmg)  # Do initial attacks
                 if out == -1:
                     out = 0
@@ -83,8 +93,11 @@ def calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, foc, b
         results[i] += 1  # Populate the results array
         
     damage_total = sum(ordered_results)
-     
     # print("Total Damage:", damage_total)
+    if full == 1:
+        print()
+        print("*** Full results for", attacks, "attacks ***")
+    
     print("Average Damage:", "\t", round(damage_total / cycles, 2))
      
     print("25th Percentile:", "\t", percentile.percentile(ordered_results, 0.25))
@@ -117,3 +130,14 @@ if foc > 0:
     print()
 else:
     calculate(cycles, attacks, at, pow, defense, arm, dice_hit, dice_dmg, 0, 0)
+
+
+#     if __name__ == "__main__":
+#         work_queue = multiprocessing.Queue()      
+#         processes = [multiprocessing.Process(target=calculate, args=(cycles, i + 1, at, pow, defense, arm, dice_hit, dice_dmg, foc, 0)) for i in range(attacks)]
+#         for p in processes:
+#             p.start()
+#         for p in processes:
+#             p.join()
+# if full == 1:
+print(round(time.time() - start_time,2), "seconds")
