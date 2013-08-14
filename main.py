@@ -9,21 +9,18 @@ import time
 start_time = time.time()
 
 # Predefined Variables
-<<<<<<< HEAD
 cycles = 10000  # How many attack cycles to sim
 attacks = 2  # How many attacks to sim
 at = 9  # MAT/RAT of Attacker
 pow = 12  # POW of Hit
 defense = 14  # DEF of Defender
 arm = 18  # ARM of Defender
-=======
 cycles = 1000000  # How many attack cycles to sim
 attacks = 1  # How many attacks to sim
 at = 7  # MAT/RAT of Attacker
 pow = 9  # POW of Hit
 defense = 14  # DEF of Defender
 arm = 15  # ARM of Defender
->>>>>>> f89d329a9e88c9459fc2e03829efa2358d6a9684
 dice_hit = 2  # Number of Hit dice
 dice_dmg = 3  # Number of Damage dice
 full = 1
