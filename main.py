@@ -7,13 +7,13 @@ import sim
 
 # Predefined Variables
 cycles = 10000  # How many attack cycles to sim
-attacks = 16  # How many attacks to sim
-at = 8  # MAT/RAT of Attacker
-pow = 14  # POW of Hit
-defense = 16  # DEF of Defender
+attacks = 2  # How many attacks to sim
+at = 9  # MAT/RAT of Attacker
+pow = 12  # POW of Hit
+defense = 14  # DEF of Defender
 arm = 18  # ARM of Defender
 dice_hit = 2  # Number of Hit dice
-dice_dmg = 2  # Number of Damage dice
+dice_dmg = 3  # Number of Damage dice
 full = 1
 foc = 0
 max_result = 100
